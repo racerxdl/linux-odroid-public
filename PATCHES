@@ -4,3 +4,4 @@
 [PATCH v3 0/5] Fix problems with Exynos4412 ISP clocks
 [PATCH v5 0/5] drm/exynos: introduce generic zpos and blending properties
 [PATCH v6 0/8] Exynos DRM: rewrite IPP subsystem and userspace API
+[PATCH 00/25] Exynos DRM: new life of IPP (Image Post Processing) subsystem
