@@ -2,3 +2,4 @@
 [PATCH] gpu/mali: integration of r5p0 for Exynos4412/Mali-400MP4
 [PATCH v9 0/5] Add runtime PM support for clocks (on Exynos SoC example)
 [PATCH v3 0/5] Fix problems with Exynos4412 ISP clocks
+[PATCH v5 0/5] drm/exynos: introduce generic zpos and blending properties
