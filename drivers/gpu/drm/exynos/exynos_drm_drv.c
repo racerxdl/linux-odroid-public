@@ -261,7 +261,7 @@ static struct exynos_drm_driver_info exynos_drm_drivers[] = {
 		DRM_COMPONENT_DRIVER | DRM_VIRTUAL_DEVICE
 	}, {
 		DRV_PTR(g2d_driver, CONFIG_DRM_EXYNOS_G2D),
-		DRM_COMPONENT_DRIVER
+		DRM_COMPONENT_DRIVER | DRM_DMA_DEVICE
 	}, {
 		DRV_PTR(fimc_driver, CONFIG_DRM_EXYNOS_FIMC),
 		DRM_COMPONENT_DRIVER | DRM_FIMC_DEVICE,
