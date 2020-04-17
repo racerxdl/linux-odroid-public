@@ -168,6 +168,8 @@ static int smsc95xx_is_macaddr_param(struct usbnet *dev, u8 *dev_mac)
 	int i, j, got_num, num;
 	u8 mtbl[MAC_ADDR_LEN];
 
+	netdev_warn(dev->net, "Received mac address as param '%s'\n", macaddr);
+
 	if (macaddr[0] == ':')
 		return 0;
 
@@ -197,14 +199,15 @@ static int smsc95xx_is_macaddr_param(struct usbnet *dev, u8 *dev_mac)
 		}
 	}
 
-	if (j == MAC_ADDR_LEN && !macaddr[i]) {
-	 	netif_dbg(dev, ifup, dev->net, "Overriding MAC address with: "
+	if (j == MAC_ADDR_LEN) {
+	 	netdev_info(dev->net, "Overriding MAC address with: "
 	 		"%02x:%02x:%02x:%02x:%02x:%02x\n", mtbl[0], mtbl[1], mtbl[2],
 	 		mtbl[3], mtbl[4], mtbl[5]);
 	 	for (i = 0; i < MAC_ADDR_LEN; i++)
 	 		dev_mac[i] = mtbl[i];
 		return 1;
 	} else {
+	 	netdev_err(dev->net, "Invalid MAC address received.");
  		return 0;
  	}
 }
@@ -969,12 +972,15 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
 {
 	const u8 *mac_addr;
 	/* Check module parameters */
-	if (smsc95xx_is_macaddr_param(dev, dev->net->dev_addr))
+	if (smsc95xx_is_macaddr_param(dev, dev->net->dev_addr)) {
+		netdev_warn(dev->net, "MAC address read from Kernel Parameter\n");
 		return;
+	}
 
 	/* maybe the boot loader passed the MAC address in devicetree */
 	mac_addr = of_get_mac_address(dev->udev->dev.of_node);
 	if (mac_addr) {
+		netdev_warn(dev->net, "MAC address read from DTB\n");
 		memcpy(dev->net->dev_addr, mac_addr, ETH_ALEN);
 		return;
 	}
@@ -984,14 +990,14 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
 			dev->net->dev_addr) == 0) {
 		if (is_valid_ether_addr(dev->net->dev_addr)) {
 			/* eeprom values are valid so use them */
-			netif_dbg(dev, ifup, dev->net, "MAC address read from EEPROM\n");
+			netdev_warn(dev->net, "MAC address read from EEPROM\n");
 			return;
 		}
 	}
 
 	/* no useful static MAC address found. generate a random one */
 	eth_hw_addr_random(dev->net);
-	netif_dbg(dev, ifup, dev->net, "MAC address set to eth_random_addr\n");
+	netdev_warn(dev->net, "MAC address set to eth_random_addr\n");
 }
 
 static int smsc95xx_set_mac_address(struct usbnet *dev)
